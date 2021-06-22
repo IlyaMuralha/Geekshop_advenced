@@ -1,0 +1,29 @@
+{% extends 'mainapp/base.html' %}
+
+{% block container %}
+    <div class="hero">
+        {% include 'mainapp/includes/main_menu.html' %}
+        <h1>наши контакты</h1>
+    </div>
+{#    <h3>{{ locations.0 }}</h3>#}
+    <div class="location">
+        {% for location_item in locations %}
+            <div class="location-1 city city-{{ forloop.counter0 }}">
+                <i class="fa fa-map-marker fa-5x"></i>
+                <h4>{{ location_item.city }}</h4>
+                <div class="contacts {{ forloop.counter0 }}">
+                    <h5>Телефон</h5>
+                    <p>{{ location_item.phone }}</p>
+                </div>
+                <div class="contacts {{ forloop.counter0 }}">
+                    <h5>Email</h5>
+                    <p>{{ location_item.email }}</p>
+                </div>
+                <div class="contacts {{ forloop.counter0 }}">
+                    <h5>Адрес</h5>
+                    <p>{{ location_item.address }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
