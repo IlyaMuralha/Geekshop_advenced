@@ -16,6 +16,7 @@ class ShopUser(AbstractUser):
     avatar = models.ImageField(upload_to='avatars', blank=True)
     activation_key = models.CharField(max_length=128, blank=True)
     activation_key_created = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
     # можно сделать вариант с лямбдой
     # activation_key_expires = models.DateTimeField(default=lambda x: now())
 
@@ -45,3 +46,18 @@ class ShopUser(AbstractUser):
                   f'перейдите поссылке: \n{DOMAIN_NAME}{verify_link}'
 
         return send_mail(subject, message, EMAIL_HOST_USER, [self.email], fail_silently=False)
+
+
+class ShopUserProfile(models.Model):
+    MALE = 'M'
+    FEMALE = 'W'
+
+    GENDER_CHOICES = (
+        (MALE, 'Мужской'),
+        (FEMALE, 'Женский'),
+    )
+
+    user = models.OneToOneField(ShopUser, primary_key=True, null=False, db_index=True, on_delete=models.CASCADE)
+    tagline = models.CharField(verbose_name='тэги', max_length=128, blank=True)
+    about_me = models.TextField(verbose_name='о себе', max_length=512, blank=True)
+    gender = models.CharField(verbose_name='пол', choices=GENDER_CHOICES, blank=True, max_length=1)
