@@ -28,6 +28,8 @@ class ShopUser(AbstractUser):
     @property
     def is_activation_key_expired(self):
         return now() - self.activation_key_created > timedelta(hours=ACTIVATION_KEY_TTL)
+        # вместо создания нового поля для юзера, можно было воспользоваться полем date_joined у AbstractUser
+        # return now() - self.date_joined > timedelta(hours=ACTIVATION_KEY_TTL)
 
     def set_activation_key(self):
         salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:6]

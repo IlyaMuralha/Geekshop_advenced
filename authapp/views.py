@@ -1,4 +1,5 @@
 from django.contrib import auth
+from django.contrib.auth import get_user_model
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -75,5 +76,10 @@ def edit(request):
     return render(request, 'authapp/update.html', context)
 
 
-def verify(request):
-    pass
+def verify(request, email, activation_key):
+    user = get_user_model().objects.get(email=email)
+    if user.activation_key == activation_key and not user.is_activation_key_expired:
+        user.is_active = True
+        user.save()
+        auth.login(request, user)
+    return render(request, 'authapp/verification.html')
