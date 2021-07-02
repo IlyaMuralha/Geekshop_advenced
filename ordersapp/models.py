@@ -29,7 +29,7 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True, verbose_name='заказ обновлен')
     is_active = models.BooleanField(default=True)
 
-    status = models.CharField(choices=STATUSES, verbose_name='статус заказа', default=FORMING)
+    status = models.CharField(choices=STATUSES, verbose_name='статус заказа', default=FORMING, max_length=3)
 
     def get_total_quantity(self):
         _items = self.orderitems.select_related()
@@ -42,7 +42,7 @@ class Order(models.Model):
         return _total_cost
 
 
-class OrderItems(models.Model):
+class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderitems')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='продукт')
     quantity = models.PositiveSmallIntegerField(default=0, verbose_name='количество')
