@@ -6,15 +6,14 @@ from django.shortcuts import render, get_object_or_404
 from mainapp.models import Product, ProductCategory
 
 
-def get_menu():
-    return ProductCategory.objects.all()
+# def get_menu():
+#     return ProductCategory.objects.all()
 
 
 def get_hot_product():
     product_ids = Product.objects.values_list('id', flat=True).all()
     random_id = random.choice(product_ids)
     return Product.objects.get(pk=random_id)
-    # return random.choice(Product.objects.all())
 
 
 def same_products(hot_product):
@@ -37,8 +36,8 @@ def products(request):
         'page_title': 'каталог',
         'hot_product': hot_product,
         'same_products': same_products(hot_product),
-        'categories': get_menu(),
-        # 'basket': basket,
+        # 'categories': get_menu(),
+        # # 'basket': basket,
     }
     return render(request, 'mainapp/products.html', context)
 
@@ -62,7 +61,7 @@ def category(request, pk):
 
     context = {
         'page_title': 'товары категории',
-        'categories': get_menu(),
+        # 'categories': get_menu(),
         'category': category,
         'products': products,
     }
@@ -74,7 +73,7 @@ def product_page(request, pk):
     context = {
         'page_title': 'страница продукта',
         'product': product,
-        'categories': get_menu(),
+        # 'categories': get_menu(),
     }
     return render(request, 'mainapp/product_page.html', context)
 

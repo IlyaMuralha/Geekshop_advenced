@@ -18,5 +18,13 @@
        class="btn btn-round form-control">
         зарегистрироваться
     </a>
+    <a href="{% url 'social:begin' 'google-oauth2' %}?next=/"
+       class="btn btn-round form-control">
+        Вход через GOOGLE
+    </a>
+    <a href="{% url 'social:begin' 'vk-oauth2' %}?next=/"
+       class="btn btn-round form-control">
+        Вход через VK
+    </a>
 
 {% endblock %}
