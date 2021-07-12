@@ -26,16 +26,18 @@ class OrderCreate(CreateView):
         data = super().get_context_data(**kwargs)
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemEditForm, extra=1)
         if self.request.POST:
-            formset = OrderFormSet(self.request.POST)
+            formset = OrderFormSet(self.request.POST, self.request.FILES)
         else:
-            basket_items = list(BasketItem.objects.filter(user=self.request.user))
-            if len(basket_items):
+            # basket_items = BasketItem.objects.filter(user=self.request.user)
+            data['form'].initial['user'] = self.request.user
+            basket_items = self.request.user.basket.all()
+            if basket_items and basket_items.count():
                 OrderFormSet = inlineformset_factory(Order, OrderItem,
-                                                     form=OrderItemEditForm, extra=len(basket_items))
+                                                     form=OrderItemEditForm, extra=basket_items.count() + 1)
                 formset = OrderFormSet()
-                for num, form in enumerate(formset.forms):
-                    form.initial['product'] = basket_items[num].product
-                    form.initial['quantity'] = basket_items[num].qty
+                for form, basket_item in zip(formset.forms, basket_items):
+                    form.initial['product'] = basket_item.product
+                    form.initial['quantity'] = basket_item.qty
             else:
                 formset = OrderFormSet()
         data['orderitems'] = formset
@@ -51,6 +53,7 @@ class OrderCreate(CreateView):
             if orderitems.is_valid():
                 orderitems.instance = self.object
                 orderitems.save()
+                self.request.user.basket.all().delete()
 
         if self.object.get_total_cost() == 0:
             self.object.delete()
@@ -67,7 +70,7 @@ class OrderUpdate(UpdateView):
         data = super().get_context_data(**kwargs)
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemEditForm, extra=1)
         if self.request.POST:
-            formset = OrderFormSet(self.request.POST, instance=self.object)
+            formset = OrderFormSet(self.request.POST, self.request.FILES, instance=self.object)
         else:
             formset = OrderFormSet(instance=self.object)
         data['orderitems'] = formset
