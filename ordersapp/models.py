@@ -57,6 +57,10 @@ class Order(models.Model):
         self.is_active = False
         self.save()
 
+    @staticmethod
+    def get_item(pk):
+        return Order.objects.get(pk=pk)
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderitems')

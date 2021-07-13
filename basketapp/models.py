@@ -4,7 +4,18 @@ from django.db import models
 from mainapp.models import Product
 
 
+# class BasketQuerySet(models.QuerySet):
+#
+#     def delete(self):
+#         for item in self:
+#             item.product.quantity += item.qty
+#             item.product.save()
+#             super().delete()
+
+
 class BasketItem(models.Model):
+    # objects = BasketQuerySet.as_manager()
+
     user = models.ForeignKey(get_user_model(),
                              on_delete=models.CASCADE,
                              related_name='basket')
@@ -16,3 +27,20 @@ class BasketItem(models.Model):
     @property
     def product_cost(self):
         return self.product.price * self.qty
+
+    @staticmethod
+    def get_item(pk):
+        return BasketItem.objects.get(pk=pk)
+
+    # def delete(self, *args, **kwargs):
+    #     self.product.quantity += self.qty
+    #     self.product.save()
+    #     super().delete(*args, **kwargs)
+    #
+    # def save(self, *args, **kwargs):
+    #     if self.pk:
+    #         self.product.quantity -= self.qty - self.__class__.objects.get(pk=self.pk).qty
+    #     else:
+    #         self.product.quantity -= self.qty
+    #     self.product.save()
+    #     super(self).save(*args, **kwargs)
