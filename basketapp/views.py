@@ -22,7 +22,6 @@ def index(request):
 def add(request, product_pk):
     if LOGIN_URL in request.META.get('HTTP_REFERER'):
         return HttpResponseRedirect(
-            # reverse('mainapp:product_page', args=[pk])
             reverse('main:product_page',
                     kwargs={'pk': product_pk}))
 
@@ -30,12 +29,11 @@ def add(request, product_pk):
         user=request.user,
         product_id=product_pk
     )
-    basket_item.qty += 1
+    basket_item.quantity += 1
     basket_item.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-# @user_passes_test(lambda user: user.is_authenticated)
 @login_required
 def remove(request, basket_item_pk):
     item = get_object_or_404(BasketItem, pk=basket_item_pk)
@@ -43,15 +41,15 @@ def remove(request, basket_item_pk):
     return HttpResponseRedirect(reverse('basket:index'))
 
 
-def update(request, basket_item_pk, qty):
+def update(request, basket_item_pk, quantity):
     if request.is_ajax():
         item = BasketItem.objects.filter(pk=basket_item_pk).first()
         if not item:
             return JsonResponse({'status': False})
-        if qty == 0:
+        if quantity == 0:
             item.delete()
         else:
-            item.qty = qty
+            item.quantity = quantity
             item.save()
         basket_summary_html = render_to_string(
             'basketapp/includes/basket_summary.html',
@@ -60,8 +58,4 @@ def update(request, basket_item_pk, qty):
         print(basket_summary_html)
         return JsonResponse({'status': True,
                              'basket_summary': basket_summary_html,
-                             # 'basket_item_pk': basket_item_pk,
-                             # 'product_cost': basket_summary_html,
-                             'qty': qty})
-        # 'total_qty': 15,
-        # 'total_price': 5987.5})
+                             'quantity': quantity})
