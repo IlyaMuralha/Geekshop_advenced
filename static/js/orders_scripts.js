@@ -53,4 +53,19 @@ window.onload = function () {
         $('.order_total_quantity').text(orderTotalQuantity.toString());
         $('.order_total_cost').text(orderTotalPrice.toString());
     }
+
+    $('.formset_row').formset({
+        addText: 'Добавить продукт',
+        deleteText: 'Удалить',
+        prefix: 'orderitems',
+        removed: deleteOrderItem,
+    });
+
+    function deleteOrderItem(row) {
+        let target_name = row[0].querySelector('input[type=number]').name
+        orderItemNum = parseInt(target_name.replace('orderitems-', '').replace('-quantity'));
+
+        deltaQuantity = -quantityArr[orderItemNum];
+        orderSummaryUpdate(priceArr[orderItemNum], deltaQuantity)
+    }
 }
