@@ -5,5 +5,7 @@ pydotplus==2.0.2
 python-dotenv~=0.17.1
 social-auth-app-django==4.0.0
 
-psycorg2-binary
+psycopg2-binary
 requests
+django-debug-toolbar
+django-debug-toolbar-template-profiler
