@@ -23,8 +23,8 @@ class ShopUser(AbstractUser):
     def basket_price(self):
         return sum(el.product_cost for el in self.basket.all())
 
-    def basket_qty(self):
-        return sum(el.qty for el in self.basket.all())
+    def basket_quantity(self):
+        return sum(el.quantity for el in self.basket.all())
 
     @property
     def is_activation_key_expired(self):

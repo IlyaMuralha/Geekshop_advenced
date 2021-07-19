@@ -59,7 +59,7 @@
     <a href="#" class="search"></a>
     <a href="{% url 'basket:index' %}" class="basket">
         {% if user.is_authenticated %}
-            <span>{{ user.basket_price|floatformat:0 }} руб ({{ user.basket_qty }} шт)</span>
+            <span>{{ user.basket_price|floatformat:0 }} руб {{ user.basket_quantity }} шт</span>
         {% endif %}
     </a>
 </div>

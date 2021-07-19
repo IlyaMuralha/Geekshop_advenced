@@ -29,7 +29,16 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True, verbose_name='заказ обновлен')
     is_active = models.BooleanField(default=True)
 
-    status = models.CharField(choices=STATUSES, verbose_name='статус заказа', default=FORMING, max_length=3)
+    status = models.CharField(choices=STATUSES, verbose_name='статус заказа',
+                              default=FORMING, max_length=3)
+
+    class Meta:
+        ordering = ('-created',)
+        verbose_name = 'заказ'
+        verbose_name_plural = 'заказы'
+
+    def is_forming(self):
+        return self.status == self.FORMING
 
     def get_total_quantity(self):
         _items = self.orderitems.select_related()
@@ -41,7 +50,12 @@ class Order(models.Model):
         _total_cost = sum(list(map(lambda x: x.get_product_cost(), _items)))
         return _total_cost
 
-    def delete(self):
+    def delete(self, using=None, keep_parents=False):
+        print('delete order')
+        for item in self.orderitems.select_related():
+            item.product.quantity += item.quantity
+            item.product.save()
+
         self.is_active = False
         self.save()
 
@@ -53,3 +67,7 @@ class OrderItem(models.Model):
 
     def get_product_cost(self):
         return self.product.price * self.quantity
+
+    @staticmethod
+    def get_item(pk):
+        return OrderItem.objects.get(pk=pk)

@@ -59,7 +59,6 @@ class ShopUserAdminUpdate(SuperUserOnlyMixin, UpdateView):
     form_class = AdminShopUserUpdateForm
     success_url = reverse_lazy('new_admin:index')
     pk_url_kwarg = 'user_pk'
-    # 7 min -> 20:12
 
 
 @user_passes_test(lambda user: user.is_superuser)
