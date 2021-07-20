@@ -5,11 +5,13 @@ from django.dispatch import receiver
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from authapp.forms import ShopUserLoginForm, ShopUserCreationForm, ShopUserChangeForm, ShopUserProfileChangeForm
 from authapp.models import ShopUser, ShopUserProfile
 
 
+@csrf_exempt
 def login(request):
     # ?next=/basket/add/4/
     # redirect_to = request.GET['next']
