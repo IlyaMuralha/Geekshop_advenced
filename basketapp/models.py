@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.functional import cached_property
 
 from mainapp.models import Product
 
@@ -23,6 +24,18 @@ class BasketItem(models.Model):
     quantity = models.PositiveIntegerField('количество', default=0)
     add_dt = models.DateTimeField('время', auto_now_add=True)
     update_dt = models.DateTimeField('время', auto_now=True)
+
+    # @cached_property
+    # def get_items_cached(self):
+    #     return self.user.basket.select_related()
+
+    # def get_total_quantity(self):
+    #     _items = self.get_items_cached
+    #     return sum(list(map(lambda x: x.quantity, _items)))
+    #
+    # def get_total_cost(self):
+    #     _items = self.get_items_cached
+    #     return sum(list(map(lambda x: x.product_cost, _items)))
 
     @property
     def product_cost(self):

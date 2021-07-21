@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.timezone import now
 
 from geekshop.settings import DOMAIN_NAME, EMAIL_HOST_USER, ACTIVATION_KEY_TTL
@@ -20,11 +21,19 @@ class ShopUser(AbstractUser):
     # можно сделать вариант с лямбдой
     # activation_key_expires = models.DateTimeField(default=lambda x: now())
 
+    @cached_property
+    def get_items_cached(self):
+        return self.basket.select_related()
+
     def basket_price(self):
-        return sum(el.product_cost for el in self.basket.all())
+        # return sum(el.product_cost for el in self.basket.all())
+        _items = self.get_items_cached
+        return sum(list(map(lambda x: x.quantity, _items)))
 
     def basket_quantity(self):
-        return sum(el.quantity for el in self.basket.all())
+        # return sum(el.quantity for el in self.basket.all())
+        _items = self.get_items_cached
+        return sum(list(map(lambda x: x.product_cost, _items)))
 
     @property
     def is_activation_key_expired(self):
