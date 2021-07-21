@@ -1,13 +1,23 @@
 import random
 
+from django.conf import settings
+from django.core.cache import cache
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
 
 from mainapp.models import Product, ProductCategory
 
 
-# def get_menu():
-#     return ProductCategory.objects.all()
+def get_links_menu():
+    if settings.LOW_CACHE:
+        key = 'links_menu'
+        links_menu = cache.get(key)
+        if links_menu is None:
+            links_menu = ProductCategory.objects.filter(is_active=True)
+            cache.set(key, links_menu)
+        return links_menu
+    else:
+        return ProductCategory.objects.filter(is_active=True)
 
 
 def get_hot_product():
@@ -62,7 +72,7 @@ def category(request, pk):
     context = {
         'page_title': 'товары категории',
         # 'categories': get_menu(),
-        'category': category,
+        'category': get_links_menu(),
         'products': products,
     }
     return render(request, 'mainapp/category_products.html', context)
