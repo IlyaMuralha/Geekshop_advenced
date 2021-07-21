@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.cache import cache_page
 
 from mainapp.models import Product, ProductCategory
 
@@ -14,7 +15,7 @@ def get_category(pk):
         category = cache.get(key)
         if category is None:
             category = get_object_or_404(ProductCategory, pk=pk)
-            cache.set(key, links_menu)
+            cache.set(key, category)
         return category
     else:
         return get_object_or_404(ProductCategory, pk=pk)
@@ -71,6 +72,7 @@ def same_products(hot_product):
                exclude(pk=hot_product.pk)[:3]
 
 
+@cache_page(3600)
 def index(request):
     context = {
         'page_title': 'главная',
@@ -132,6 +134,7 @@ def product_page(request, pk):
     return render(request, 'mainapp/product_page.html', context)
 
 
+@cache_page(3600)
 def contact(request):
     locations = [
         {'city': 'Москва',
