@@ -40,15 +40,22 @@ class Order(models.Model):
     def is_forming(self):
         return self.status == self.FORMING
 
-    def get_total_quantity(self):
+    def get_summary(self):
         _items = self.orderitems.select_related()
-        _total_quantity = sum(list(map(lambda x: x.quantity, _items)))
-        return _total_quantity
+        return {
+            'total_cost': sum(list(map(lambda x: x.quantity * x.product.price, _items))),
+            'total_quantity': sum(list(map(lambda x: x.quantity, _items)))
+        }
 
-    def get_total_cost(self):
-        _items = self.orderitems.select_related()
-        _total_cost = sum(list(map(lambda x: x.get_product_cost(), _items)))
-        return _total_cost
+    # def get_total_quantity(self):
+    #     _items = self.orderitems.select_related()
+    #     _total_quantity = sum(list(map(lambda x: x.quantity, _items)))
+    #     return _total_quantity
+    #
+    # def get_total_cost(self):
+    #     _items = self.orderitems.select_related()
+    #     _total_cost = sum(list(map(lambda x: x.get_product_cost(), _items)))
+    #     return _total_cost
 
     def delete(self, using=None, keep_parents=False):
         print('delete order')
