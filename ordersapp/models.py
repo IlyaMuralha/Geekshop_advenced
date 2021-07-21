@@ -47,15 +47,15 @@ class Order(models.Model):
             'total_quantity': sum(list(map(lambda x: x.quantity, _items)))
         }
 
-    # def get_total_quantity(self):
-    #     _items = self.orderitems.select_related()
-    #     _total_quantity = sum(list(map(lambda x: x.quantity, _items)))
-    #     return _total_quantity
-    #
-    # def get_total_cost(self):
-    #     _items = self.orderitems.select_related()
-    #     _total_cost = sum(list(map(lambda x: x.get_product_cost(), _items)))
-    #     return _total_cost
+    def get_total_quantity(self):
+        _items = self.orderitems.select_related()
+        _total_quantity = sum(list(map(lambda x: x.quantity, _items)))
+        return _total_quantity
+
+    def get_total_cost(self):
+        _items = self.orderitems.select_related()
+        _total_cost = sum(list(map(lambda x: x.get_product_cost(), _items)))
+        return _total_cost
 
     def delete(self, using=None, keep_parents=False):
         print('delete order')
