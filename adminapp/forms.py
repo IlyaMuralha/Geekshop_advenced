@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth import get_user_model
 from django.forms import ModelForm, HiddenInput
 
@@ -14,6 +15,8 @@ class AdminShopUserUpdateForm(ShopUserChangeForm):
 
 
 class AdminProductCategoryCreateForm(ModelForm):
+    discount = forms.IntegerField(label='скидка', required=False, min_value=0, max_value=90, initial=0)
+
     class Meta:
         model = ProductCategory
         fields = "__all__"

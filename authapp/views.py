@@ -13,6 +13,8 @@ from authapp.models import ShopUser, ShopUserProfile
 
 @csrf_exempt
 def login(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('main:index'))
     # ?next=/basket/add/4/
     # redirect_to = request.GET['next']
     redirect_to = request.GET.get('next', '')
@@ -87,6 +89,7 @@ def edit(request):
 
 def verify(request, email, activation_key):
     user = get_user_model().objects.get(email=email)
+    # user = ShopUser.objects.get(email=email)
     if user.activation_key == activation_key and not user.is_activation_key_expired:
         user.is_active = True
         user.save()

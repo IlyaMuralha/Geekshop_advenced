@@ -1,0 +1,14 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: 
+ =?utf-8?b?0J/QvtC00YLQstC10YDQttC00LXQvdC40LUg0YPRh9C10YLQvdC+0Lkg0LfQsNC/?=
+ =?utf-8?b?0LjRgdC4IGRqYW5nbzIu?=
+From: django@gb.local
+To: django2@gb.local.ru
+Date: Fri, 23 Jul 2021 13:37:14 -0000
+Message-ID: <162704743407.76656.9524187186160705761@muralha-VirtualUbuntu>
+
+Для подтверждения учетной записи django2 на сайте http://localhost:8000 перейдите поссылке: 
+http://localhost:8000/auth/user/verify/django2@gb.local.ru/2fb44d077aaa3ab52e01e9a986520f9634c2665c/
+-------------------------------------------------------------------------------
