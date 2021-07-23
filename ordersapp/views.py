@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import F
 from django.db.models.signals import pre_save, pre_delete
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
@@ -119,18 +120,20 @@ def forming_complete(request, pk):
     return HttpResponseRedirect(reverse('order:list'))
 
 
-@receiver(pre_save, sender=BasketItem)
+# @receiver(pre_save, sender=BasketItem)
 @receiver(pre_save, sender=OrderItem)
 def products_quantity_update(sender, update_fields, instance, **kwargs):
     # if 'product' in update_fields or 'quantity' in update_fields:
     if instance.pk:
-        instance.product.quantity -= instance.quantity - instance.get_item(instance.pk).quantity
+        # instance.product.quantity -= instance.quantity - instance.get_item(instance.pk).quantity
+        instance.product.quantity += sender.get_item(instance.pk).quantity - instance.quantity
+        # instance.product.quantity = sender.get_item(instance.pk).quantity - F('quantity')
     else:
         instance.product.quantity -= instance.quantity
     instance.product.save()
 
 
-@receiver(pre_delete, sender=BasketItem)
+# @receiver(pre_delete, sender=BasketItem)
 @receiver(pre_delete, sender=OrderItem)
 def products_quantity_delete(sender, instance, **kwargs):
     print('delete item')
