@@ -3,6 +3,9 @@ import random
 from django.conf import settings
 from django.core.cache import cache
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db import connection
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.cache import cache_page
 
@@ -155,3 +158,20 @@ def contact(request):
         'locations': locations,
     }
     return render(request, 'mainapp/contact.html', context)
+
+
+def db_profile_by_type(prefix, q_type, queries):
+    print(f'db_profile {q_type} for {prefix}:')
+    for query in filter(lambda x: q_type in x['sql'], queries):
+        print(query['sql'])
+
+
+@receiver(pre_save, sender=ProductCategory)
+def update_productcategory_save(sender, instance, **kwargs):
+    if instance.pk:
+        if instance.is_active:
+            instance.product_set.update(is_active=True)
+        else:
+            instance.product_set.update(is_active=False)
+
+        db_profile_by_type(sender, 'UPDATE', connection.queries)
