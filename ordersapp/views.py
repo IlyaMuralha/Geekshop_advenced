@@ -127,7 +127,7 @@ def products_quantity_update(sender, update_fields, instance, **kwargs):
     if instance.pk:
         # instance.product.quantity -= instance.quantity - instance.get_item(instance.pk).quantity
         instance.product.quantity += sender.get_item(instance.pk).quantity - instance.quantity
-        # instance.product.quantity = sender.get_item(instance.pk).quantity - F('quantity')
+        # instance.product.quantity = sender.get_item(instance.pk).quantity - F('instance__quantity')
     else:
         instance.product.quantity -= instance.quantity
     instance.product.save()
