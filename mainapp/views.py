@@ -72,7 +72,6 @@ def same_products(hot_product):
                exclude(pk=hot_product.pk)[:3]
 
 
-@cache_page(3600)
 def index(request):
     context = {
         'page_title': 'главная',
